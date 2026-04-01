@@ -103,7 +103,7 @@ export function Sidebar({
                 <button
                   className="btn-icon sidebar-action btn-danger"
                   title="Delete project"
-                  onClick={e => { e.stopPropagation(); onDeleteProject(p.id) }}
+                  onClick={e => { e.stopPropagation(); if (window.confirm(`"${p.name}" を削除しますか？配下のタスク・リソースもすべて削除されます。`)) onDeleteProject(p.id) }}
                 >
                   ×
                 </button>
