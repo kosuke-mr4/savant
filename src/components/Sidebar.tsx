@@ -11,6 +11,7 @@ interface Props {
   onAddProject: (name: string) => void
   onAddTask: (name: string) => void
   onDeleteProject: (id: string) => void
+  onRenameProject: (id: string, name: string) => void
   allTasksByProject: Record<string, Task[]>
 }
 
@@ -29,11 +30,13 @@ export function Sidebar({
   onAddProject,
   onAddTask,
   onDeleteProject,
+  onRenameProject,
   allTasksByProject,
 }: Props) {
   const [expandedProjects, setExpandedProjects] = useState<Set<string>>(new Set())
   const [addingProject, setAddingProject] = useState(false)
   const [addingTaskFor, setAddingTaskFor] = useState<string | null>(null)
+  const [renamingProjectId, setRenamingProjectId] = useState<string | null>(null)
   const [inputValue, setInputValue] = useState('')
 
   const toggleExpand = (id: string) => {
@@ -53,18 +56,26 @@ export function Sidebar({
   const submitProject = () => {
     if (inputValue.trim()) {
       onAddProject(inputValue.trim())
-      setInputValue('')
-      setAddingProject(false)
     }
+    setInputValue('')
+    setAddingProject(false)
   }
 
   const submitTask = () => {
     if (inputValue.trim() && addingTaskFor) {
       onSelectProject(addingTaskFor)
       onAddTask(inputValue.trim())
-      setInputValue('')
-      setAddingTaskFor(null)
     }
+    setInputValue('')
+    setAddingTaskFor(null)
+  }
+
+  const submitRename = (id: string) => {
+    if (inputValue.trim()) {
+      onRenameProject(id, inputValue.trim())
+    }
+    setInputValue('')
+    setRenamingProjectId(null)
   }
 
   return (
@@ -84,9 +95,28 @@ export function Sidebar({
                 <button className="expand-btn" onClick={() => toggleExpand(p.id)}>
                   {isExpanded ? '▾' : '▸'}
                 </button>
-                <span className="project-name" onClick={() => handleProjectSelect(p.id)}>
-                  {p.name}
-                </span>
+                {renamingProjectId === p.id ? (
+                  <input
+                    className="project-rename-input"
+                    type="text"
+                    value={inputValue}
+                    onChange={e => setInputValue(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter') submitRename(p.id)
+                      if (e.key === 'Escape') { setRenamingProjectId(null); setInputValue('') }
+                    }}
+                    onBlur={() => submitRename(p.id)}
+                    autoFocus
+                  />
+                ) : (
+                  <span
+                    className="project-name"
+                    onClick={() => handleProjectSelect(p.id)}
+                    onDoubleClick={() => { setRenamingProjectId(p.id); setInputValue(p.name) }}
+                  >
+                    {p.name}
+                  </span>
+                )}
                 <button
                   className="btn-icon sidebar-action"
                   title="Add task"
@@ -131,6 +161,7 @@ export function Sidebar({
                           if (e.key === 'Enter') submitTask()
                           if (e.key === 'Escape') { setAddingTaskFor(null); setInputValue('') }
                         }}
+                        onBlur={submitTask}
                         autoFocus
                       />
                     </div>
@@ -153,6 +184,7 @@ export function Sidebar({
               if (e.key === 'Enter') submitProject()
               if (e.key === 'Escape') { setAddingProject(false); setInputValue('') }
             }}
+            onBlur={submitProject}
             autoFocus
           />
         </div>

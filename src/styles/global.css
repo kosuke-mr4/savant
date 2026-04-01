@@ -112,6 +112,19 @@ body {
   white-space: nowrap;
 }
 
+.project-rename-input {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 1px 4px;
+  border: 0.5px solid var(--accent);
+  border-radius: 3px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  outline: none;
+  min-width: 0;
+}
+
 .sidebar-tasks {
   padding-left: 12px;
 }

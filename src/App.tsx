@@ -6,7 +6,7 @@ import type { Task } from './types'
 import './styles/global.css'
 
 export default function App() {
-  const { projects, loading, addProject, deleteProject, reload: reloadProjects } = useProjects()
+  const { projects, loading, addProject, updateProject, deleteProject, reload: reloadProjects } = useProjects()
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null)
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
   const { tasks, addTask, updateTask, deleteTask, reload: reloadTasks } = useTasks(selectedProjectId)
@@ -53,6 +53,13 @@ export default function App() {
   const handleUpdateTask = async (task: Task) => {
     await updateTask(task)
     await loadAllTasks()
+  }
+
+  const handleRenameProject = async (id: string, name: string) => {
+    const project = projects.find(p => p.id === id)
+    if (project) {
+      await updateProject({ ...project, name })
+    }
   }
 
   const handleDeleteProject = async (id: string) => {
@@ -114,6 +121,7 @@ export default function App() {
         onAddProject={handleAddProject}
         onAddTask={handleAddTask}
         onDeleteProject={handleDeleteProject}
+        onRenameProject={handleRenameProject}
         allTasksByProject={allTasksByProject}
       />
       <main className="main-content">

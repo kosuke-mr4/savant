@@ -19,9 +19,9 @@ export function ProgressLog({ logs, onAdd }: Props) {
   const handleAdd = () => {
     if (value.trim()) {
       onAdd(value.trim())
-      setValue('')
-      setAdding(false)
     }
+    setValue('')
+    setAdding(false)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -49,6 +49,7 @@ export function ProgressLog({ logs, onAdd }: Props) {
             value={value}
             onChange={e => setValue(e.target.value)}
             onKeyDown={handleKeyDown}
+            onBlur={handleAdd}
           />
           <button className="btn-sm" disabled={!value.trim()} onClick={handleAdd}>Add</button>
           <button className="btn-sm btn-ghost" onClick={() => { setAdding(false); setValue('') }}>Cancel</button>
