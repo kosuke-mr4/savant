@@ -12,17 +12,33 @@ const TYPE_ICONS: Record<Resource['type'], string> = {
 interface Props {
   resources: Resource[]
   onAdd: (type: Resource['type'], value: string, label: string) => void
+  onUpdate: (resource: Resource) => void
   onDelete: (id: string) => void
 }
 
-export function ResourceList({ resources, onAdd, onDelete }: Props) {
+export function ResourceList({ resources, onAdd, onUpdate, onDelete }: Props) {
   const [adding, setAdding] = useState(false)
   const [copiedId, setCopiedId] = useState<string | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editValue, setEditValue] = useState('')
 
   const copyToClipboard = async (text: string, id: string) => {
     await navigator.clipboard.writeText(text)
     setCopiedId(id)
     setTimeout(() => setCopiedId(null), 1500)
+  }
+
+  const startEdit = (r: Resource) => {
+    setEditingId(r.id)
+    setEditValue(r.label)
+  }
+
+  const submitEdit = (r: Resource) => {
+    if (editValue.trim() && editValue.trim() !== r.label) {
+      onUpdate({ ...r, label: editValue.trim() })
+    }
+    setEditingId(null)
+    setEditValue('')
   }
 
   return (
@@ -41,9 +57,27 @@ export function ResourceList({ resources, onAdd, onDelete }: Props) {
       {resources.map(r => (
         <div key={r.id} className="resource-item">
           <span className="resource-icon">{TYPE_ICONS[r.type]}</span>
-          <span className={`resource-value ${r.type === 'file' ? 'mono' : ''}`} title={r.value}>
-            {r.label}
-          </span>
+          {editingId === r.id ? (
+            <input
+              className={`resource-edit-input ${r.type === 'file' ? 'mono' : ''}`}
+              value={editValue}
+              onChange={e => setEditValue(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') submitEdit(r)
+                if (e.key === 'Escape') { setEditingId(null); setEditValue('') }
+              }}
+              onBlur={() => submitEdit(r)}
+              autoFocus
+            />
+          ) : (
+            <span
+              className={`resource-value ${r.type === 'file' ? 'mono' : ''}`}
+              title={r.value}
+              onDoubleClick={() => startEdit(r)}
+            >
+              {r.label}
+            </span>
+          )}
           <div className="resource-actions">
             {(r.type === 'url' || r.type === 'chat') && (
               <a href={r.value} target="_blank" rel="noopener noreferrer" className="btn-icon" title="Open">

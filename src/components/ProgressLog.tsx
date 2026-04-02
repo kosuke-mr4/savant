@@ -4,6 +4,7 @@ import type { ProgressLog as ProgressLogType } from '../types'
 interface Props {
   logs: ProgressLogType[]
   onAdd: (content: string) => void
+  onUpdate: (log: ProgressLogType) => void
 }
 
 function formatDate(iso: string): string {
@@ -11,9 +12,11 @@ function formatDate(iso: string): string {
   return d.toLocaleDateString('ja-JP', { month: 'short', day: 'numeric' })
 }
 
-export function ProgressLog({ logs, onAdd }: Props) {
+export function ProgressLog({ logs, onAdd, onUpdate }: Props) {
   const [adding, setAdding] = useState(false)
   const [value, setValue] = useState('')
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editValue, setEditValue] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleAdd = () => {
@@ -27,6 +30,19 @@ export function ProgressLog({ logs, onAdd }: Props) {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') handleAdd()
     if (e.key === 'Escape') { setAdding(false); setValue('') }
+  }
+
+  const startEdit = (log: ProgressLogType) => {
+    setEditingId(log.id)
+    setEditValue(log.content)
+  }
+
+  const submitEdit = (log: ProgressLogType) => {
+    if (editValue.trim() && editValue.trim() !== log.content) {
+      onUpdate({ ...log, content: editValue.trim() })
+    }
+    setEditingId(null)
+    setEditValue('')
   }
 
   return (
@@ -63,7 +79,21 @@ export function ProgressLog({ logs, onAdd }: Props) {
       {logs.map(log => (
         <div key={log.id} className="log-entry">
           <span className="log-date">{formatDate(log.createdAt)}</span>
-          <span className="log-content">{log.content}</span>
+          {editingId === log.id ? (
+            <input
+              className="log-edit-input"
+              value={editValue}
+              onChange={e => setEditValue(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') submitEdit(log)
+                if (e.key === 'Escape') { setEditingId(null); setEditValue('') }
+              }}
+              onBlur={() => submitEdit(log)}
+              autoFocus
+            />
+          ) : (
+            <span className="log-content" onDoubleClick={() => startEdit(log)}>{log.content}</span>
+          )}
         </div>
       ))}
     </div>

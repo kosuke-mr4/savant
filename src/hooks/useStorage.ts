@@ -118,12 +118,17 @@ export function useResources(taskId: string | null) {
     await reload()
   }, [resources.length, reload])
 
+  const updateResource = useCallback(async (resource: Resource) => {
+    await adapter.saveResource(resource)
+    await reload()
+  }, [reload])
+
   const deleteResource = useCallback(async (id: string) => {
     await adapter.deleteResource(id)
     await reload()
   }, [reload])
 
-  return { resources, addResource, deleteResource, reload }
+  return { resources, addResource, updateResource, deleteResource, reload }
 }
 
 export function useProgressLogs(taskId: string | null) {
@@ -151,7 +156,12 @@ export function useProgressLogs(taskId: string | null) {
     await reload()
   }, [reload])
 
-  return { logs, addLog, reload }
+  const updateLog = useCallback(async (log: ProgressLog) => {
+    await adapter.addLog(log)
+    await reload()
+  }, [reload])
+
+  return { logs, addLog, updateLog, reload }
 }
 
 function generateLabel(type: Resource['type'], value: string): string {
