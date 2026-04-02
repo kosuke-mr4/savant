@@ -7,6 +7,9 @@ const DB_VERSION = 2
 
 function getDB(): Promise<IDBPDatabase> {
   return openDB(DB_NAME, DB_VERSION, {
+    blocked() {
+      console.warn('IndexedDB upgrade blocked — close other tabs and reload')
+    },
     upgrade(db, oldVersion) {
       if (oldVersion < 1) {
         const projectStore = db.createObjectStore('projects', { keyPath: 'id' })

@@ -10,9 +10,14 @@ export function useProjects() {
   const [loading, setLoading] = useState(true)
 
   const reload = useCallback(async () => {
-    const data = await adapter.getProjects()
-    setProjects(data)
-    setLoading(false)
+    try {
+      const data = await adapter.getProjects()
+      setProjects(data)
+    } catch (e) {
+      console.error('Failed to load projects:', e)
+    } finally {
+      setLoading(false)
+    }
   }, [])
 
   useEffect(() => { reload() }, [reload])
