@@ -40,6 +40,13 @@ export interface ProgressLog {
   createdAt: string
 }
 
+export interface Prompt {
+  id: string
+  taskId: string
+  content: string
+  order: number
+}
+
 export interface ExportData {
   version: number
   exportedAt: string
@@ -47,4 +54,5 @@ export interface ExportData {
   tasks: Task[]
   resources: Resource[]
   progressLogs: ProgressLog[]
+  prompts: Prompt[]
 }

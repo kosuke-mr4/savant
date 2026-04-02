@@ -454,6 +454,78 @@ body {
   margin-right: auto;
 }
 
+/* ──── Prompts ──── */
+
+.prompt-list {
+  margin-bottom: 24px;
+}
+
+.prompt-add-form {
+  margin-bottom: 8px;
+}
+
+.prompt-add-form input {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 13px;
+  border: 0.5px solid var(--border-primary);
+  border-radius: 4px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.prompt-add-form input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(9, 105, 218, 0.15);
+}
+
+.prompt-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 0.5px solid var(--border-secondary);
+  margin-bottom: 4px;
+}
+
+.prompt-item:hover {
+  background: var(--bg-hover);
+}
+
+.prompt-content {
+  flex: 1;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.prompt-edit-input {
+  flex: 1;
+  font-size: 13px;
+  padding: 2px 6px;
+  border: 0.5px solid var(--accent);
+  border-radius: 3px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  outline: none;
+  min-width: 0;
+}
+
+.prompt-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+.prompt-item:hover .prompt-actions {
+  opacity: 1;
+}
+
 /* ──── Progress Log ──── */
 
 .progress-log {

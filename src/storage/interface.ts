@@ -1,4 +1,4 @@
-import type { Project, Task, Resource, ProgressLog, ExportData } from '../types'
+import type { Project, Task, Resource, ProgressLog, Prompt, ExportData } from '../types'
 
 export interface StorageAdapter {
   getProjects(): Promise<Project[]>
@@ -17,6 +17,10 @@ export interface StorageAdapter {
 
   getLogsByTask(taskId: string): Promise<ProgressLog[]>
   addLog(log: ProgressLog): Promise<void>
+
+  getPromptsByTask(taskId: string): Promise<Prompt[]>
+  savePrompt(prompt: Prompt): Promise<void>
+  deletePrompt(id: string): Promise<void>
 
   exportAll(): Promise<ExportData>
   importAll(data: ExportData): Promise<void>

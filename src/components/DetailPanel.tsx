@@ -2,8 +2,9 @@ import { useState } from 'react'
 import type { Task, Project } from '../types'
 import { StatusPill } from './StatusPill'
 import { ResourceList } from './ResourceList'
+import { PromptList } from './PromptList'
 import { ProgressLog } from './ProgressLog'
-import { useResources, useProgressLogs } from '../hooks/useStorage'
+import { useResources, usePrompts, useProgressLogs } from '../hooks/useStorage'
 
 interface Props {
   task: Task
@@ -14,6 +15,7 @@ interface Props {
 
 export function DetailPanel({ task, project, onUpdateTask, onDeleteTask }: Props) {
   const { resources, addResource, updateResource, deleteResource } = useResources(task.id)
+  const { prompts, addPrompt, updatePrompt, deletePrompt } = usePrompts(task.id)
   const { logs, addLog, updateLog } = useProgressLogs(task.id)
   const [editingName, setEditingName] = useState(false)
   const [editingDesc, setEditingDesc] = useState(false)
@@ -105,6 +107,7 @@ export function DetailPanel({ task, project, onUpdateTask, onDeleteTask }: Props
       </div>
 
       <ResourceList resources={resources} onAdd={addResource} onUpdate={updateResource} onDelete={deleteResource} />
+      <PromptList prompts={prompts} onAdd={addPrompt} onUpdate={updatePrompt} onDelete={deletePrompt} />
       <ProgressLog logs={logs} onAdd={addLog} onUpdate={updateLog} />
     </div>
   )

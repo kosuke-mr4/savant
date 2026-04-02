@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import type { StorageAdapter } from '../storage/interface'
-import type { Project, Task, Resource, ProgressLog } from '../types'
+import type { Project, Task, Resource, ProgressLog, Prompt } from '../types'
 import { IndexedDBAdapter } from '../storage/indexeddb'
 
 const adapter: StorageAdapter = new IndexedDBAdapter()
@@ -162,6 +162,44 @@ export function useProgressLogs(taskId: string | null) {
   }, [reload])
 
   return { logs, addLog, updateLog, reload }
+}
+
+export function usePrompts(taskId: string | null) {
+  const [prompts, setPrompts] = useState<Prompt[]>([])
+  const taskIdRef = useRef(taskId)
+  taskIdRef.current = taskId
+
+  const reload = useCallback(async () => {
+    if (!taskIdRef.current) { setPrompts([]); return }
+    const data = await adapter.getPromptsByTask(taskIdRef.current)
+    setPrompts(data)
+  }, [])
+
+  useEffect(() => { reload() }, [taskId, reload])
+
+  const addPrompt = useCallback(async (content: string) => {
+    if (!taskIdRef.current) return
+    const prompt: Prompt = {
+      id: crypto.randomUUID(),
+      taskId: taskIdRef.current,
+      content,
+      order: prompts.length,
+    }
+    await adapter.savePrompt(prompt)
+    await reload()
+  }, [prompts.length, reload])
+
+  const updatePrompt = useCallback(async (prompt: Prompt) => {
+    await adapter.savePrompt(prompt)
+    await reload()
+  }, [reload])
+
+  const deletePrompt = useCallback(async (id: string) => {
+    await adapter.deletePrompt(id)
+    await reload()
+  }, [reload])
+
+  return { prompts, addPrompt, updatePrompt, deletePrompt, reload }
 }
 
 function generateLabel(type: Resource['type'], value: string): string {
