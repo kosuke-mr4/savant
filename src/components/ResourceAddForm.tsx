@@ -14,7 +14,7 @@ export function ResourceAddForm({ onAdd, onCancel }: Props) {
   useEffect(() => { inputRef.current?.focus() }, [])
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && value.trim()) {
+    if (e.key === 'Enter' && !e.nativeEvent.isComposing && value.trim()) {
       onAdd(detectResourceType(value.trim()), value.trim(), label.trim())
     }
     if (e.key === 'Escape') {

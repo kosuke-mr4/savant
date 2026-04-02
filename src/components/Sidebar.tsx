@@ -102,7 +102,7 @@ export function Sidebar({
                     value={inputValue}
                     onChange={e => setInputValue(e.target.value)}
                     onKeyDown={e => {
-                      if (e.key === 'Enter') submitRename(p.id)
+                      if (e.key === 'Enter' && !e.nativeEvent.isComposing) submitRename(p.id)
                       if (e.key === 'Escape') { setRenamingProjectId(null); setInputValue('') }
                     }}
                     onBlur={() => submitRename(p.id)}
@@ -158,7 +158,7 @@ export function Sidebar({
                         value={inputValue}
                         onChange={e => setInputValue(e.target.value)}
                         onKeyDown={e => {
-                          if (e.key === 'Enter') submitTask()
+                          if (e.key === 'Enter' && !e.nativeEvent.isComposing) submitTask()
                           if (e.key === 'Escape') { setAddingTaskFor(null); setInputValue('') }
                         }}
                         onBlur={submitTask}
@@ -181,7 +181,7 @@ export function Sidebar({
             value={inputValue}
             onChange={e => setInputValue(e.target.value)}
             onKeyDown={e => {
-              if (e.key === 'Enter') submitProject()
+              if (e.key === 'Enter' && !e.nativeEvent.isComposing) submitProject()
               if (e.key === 'Escape') { setAddingProject(false); setInputValue('') }
             }}
             onBlur={submitProject}

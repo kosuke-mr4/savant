@@ -63,7 +63,7 @@ export function ResourceList({ resources, onAdd, onUpdate, onDelete }: Props) {
               value={editValue}
               onChange={e => setEditValue(e.target.value)}
               onKeyDown={e => {
-                if (e.key === 'Enter') submitEdit(r)
+                if (e.key === 'Enter' && !e.nativeEvent.isComposing) submitEdit(r)
                 if (e.key === 'Escape') { setEditingId(null); setEditValue('') }
               }}
               onBlur={() => submitEdit(r)}

@@ -28,7 +28,7 @@ export function ProgressLog({ logs, onAdd, onUpdate }: Props) {
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') handleAdd()
+    if (e.key === 'Enter' && !e.nativeEvent.isComposing) handleAdd()
     if (e.key === 'Escape') { setAdding(false); setValue('') }
   }
 
@@ -85,7 +85,7 @@ export function ProgressLog({ logs, onAdd, onUpdate }: Props) {
               value={editValue}
               onChange={e => setEditValue(e.target.value)}
               onKeyDown={e => {
-                if (e.key === 'Enter') submitEdit(log)
+                if (e.key === 'Enter' && !e.nativeEvent.isComposing) submitEdit(log)
                 if (e.key === 'Escape') { setEditingId(null); setEditValue('') }
               }}
               onBlur={() => submitEdit(log)}

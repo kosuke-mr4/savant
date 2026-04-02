@@ -69,7 +69,7 @@ export function DetailPanel({ task, project, onUpdateTask, onDeleteTask }: Props
               value={nameValue}
               onChange={e => setNameValue(e.target.value)}
               onBlur={saveName}
-              onKeyDown={e => { if (e.key === 'Enter') saveName(); if (e.key === 'Escape') { setNameValue(task.name); setEditingName(false) } }}
+              onKeyDown={e => { if (e.key === 'Enter' && !e.nativeEvent.isComposing) saveName(); if (e.key === 'Escape') { setNameValue(task.name); setEditingName(false) } }}
               autoFocus
             />
           ) : (
