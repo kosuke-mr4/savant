@@ -14,7 +14,7 @@ export function PromptList({ prompts, onAdd, onUpdate, onDelete }: Props) {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editValue, setEditValue] = useState('')
   const [copiedId, setCopiedId] = useState<string | null>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const handleAdd = () => {
     if (value.trim()) {
@@ -25,7 +25,7 @@ export function PromptList({ prompts, onAdd, onUpdate, onDelete }: Props) {
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.nativeEvent.isComposing) handleAdd()
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && !e.nativeEvent.isComposing) handleAdd()
     if (e.key === 'Escape') { setAdding(false); setValue('') }
   }
 
@@ -53,23 +53,27 @@ export function PromptList({ prompts, onAdd, onUpdate, onDelete }: Props) {
       <div className="section-header">
         <h3>Prompts</h3>
         {!adding && (
-          <button className="btn-sm" onClick={() => { setAdding(true); setTimeout(() => inputRef.current?.focus(), 0) }}>
+          <button className="btn-sm" onClick={() => { setAdding(true); setTimeout(() => textareaRef.current?.focus(), 0) }}>
             + Add
           </button>
         )}
       </div>
 
       {adding && (
-        <div className="prompt-add-form">
-          <input
-            ref={inputRef}
-            type="text"
+        <div className="multiline-add-form">
+          <textarea
+            ref={textareaRef}
             placeholder="Draft a prompt..."
             value={value}
             onChange={e => setValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            onBlur={handleAdd}
+            rows={3}
           />
+          <div className="multiline-add-actions">
+            <span className="submit-hint">⌘+Enter to submit</span>
+            <button className="btn-sm" disabled={!value.trim()} onClick={handleAdd}>Add</button>
+            <button className="btn-sm btn-ghost" onClick={() => { setAdding(false); setValue('') }}>Cancel</button>
+          </div>
         </div>
       )}
 
@@ -80,19 +84,20 @@ export function PromptList({ prompts, onAdd, onUpdate, onDelete }: Props) {
       {prompts.map(p => (
         <div key={p.id} className="prompt-item">
           {editingId === p.id ? (
-            <input
-              className="prompt-edit-input"
+            <textarea
+              className="multiline-edit-input"
               value={editValue}
               onChange={e => setEditValue(e.target.value)}
               onKeyDown={e => {
-                if (e.key === 'Enter' && !e.nativeEvent.isComposing) submitEdit(p)
+                if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && !e.nativeEvent.isComposing) submitEdit(p)
                 if (e.key === 'Escape') { setEditingId(null); setEditValue('') }
               }}
               onBlur={() => submitEdit(p)}
+              rows={Math.max(3, editValue.split('\n').length)}
               autoFocus
             />
           ) : (
-            <span className="prompt-content" onDoubleClick={() => startEdit(p)}>
+            <span className="prompt-content multiline" onDoubleClick={() => startEdit(p)}>
               {p.content}
             </span>
           )}

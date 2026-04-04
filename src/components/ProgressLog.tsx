@@ -17,7 +17,7 @@ export function ProgressLog({ logs, onAdd, onUpdate }: Props) {
   const [value, setValue] = useState('')
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editValue, setEditValue] = useState('')
-  const inputRef = useRef<HTMLInputElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const handleAdd = () => {
     if (value.trim()) {
@@ -28,7 +28,7 @@ export function ProgressLog({ logs, onAdd, onUpdate }: Props) {
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.nativeEvent.isComposing) handleAdd()
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && !e.nativeEvent.isComposing) handleAdd()
     if (e.key === 'Escape') { setAdding(false); setValue('') }
   }
 
@@ -50,25 +50,27 @@ export function ProgressLog({ logs, onAdd, onUpdate }: Props) {
       <div className="section-header">
         <h3>Progress</h3>
         {!adding && (
-          <button className="btn-sm" onClick={() => { setAdding(true); setTimeout(() => inputRef.current?.focus(), 0) }}>
+          <button className="btn-sm" onClick={() => { setAdding(true); setTimeout(() => textareaRef.current?.focus(), 0) }}>
             + Log
           </button>
         )}
       </div>
 
       {adding && (
-        <div className="log-add-form">
-          <input
-            ref={inputRef}
-            type="text"
+        <div className="multiline-add-form">
+          <textarea
+            ref={textareaRef}
             placeholder="What did you do?"
             value={value}
             onChange={e => setValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            onBlur={handleAdd}
+            rows={3}
           />
-          <button className="btn-sm" disabled={!value.trim()} onClick={handleAdd}>Add</button>
-          <button className="btn-sm btn-ghost" onClick={() => { setAdding(false); setValue('') }}>Cancel</button>
+          <div className="multiline-add-actions">
+            <span className="submit-hint">⌘+Enter to submit</span>
+            <button className="btn-sm" disabled={!value.trim()} onClick={handleAdd}>Add</button>
+            <button className="btn-sm btn-ghost" onClick={() => { setAdding(false); setValue('') }}>Cancel</button>
+          </div>
         </div>
       )}
 
@@ -80,19 +82,20 @@ export function ProgressLog({ logs, onAdd, onUpdate }: Props) {
         <div key={log.id} className="log-entry">
           <span className="log-date">{formatDate(log.createdAt)}</span>
           {editingId === log.id ? (
-            <input
-              className="log-edit-input"
+            <textarea
+              className="multiline-edit-input"
               value={editValue}
               onChange={e => setEditValue(e.target.value)}
               onKeyDown={e => {
-                if (e.key === 'Enter' && !e.nativeEvent.isComposing) submitEdit(log)
+                if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && !e.nativeEvent.isComposing) submitEdit(log)
                 if (e.key === 'Escape') { setEditingId(null); setEditValue('') }
               }}
               onBlur={() => submitEdit(log)}
+              rows={Math.max(3, editValue.split('\n').length)}
               autoFocus
             />
           ) : (
-            <span className="log-content" onDoubleClick={() => startEdit(log)}>{log.content}</span>
+            <span className="log-content multiline" onDoubleClick={() => startEdit(log)}>{log.content}</span>
           )}
         </div>
       ))}

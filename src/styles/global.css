@@ -460,24 +460,62 @@ body {
   margin-bottom: 24px;
 }
 
-.prompt-add-form {
+/* ──── Multiline shared (Prompts + Logs) ──── */
+
+.multiline-add-form {
   margin-bottom: 8px;
 }
 
-.prompt-add-form input {
+.multiline-add-form textarea {
   width: 100%;
   padding: 6px 8px;
+  font-family: inherit;
   font-size: 13px;
+  line-height: 1.5;
   border: 0.5px solid var(--border-primary);
   border-radius: 4px;
   background: var(--bg-primary);
   color: var(--text-primary);
   outline: none;
+  resize: vertical;
 }
 
-.prompt-add-form input:focus {
+.multiline-add-form textarea:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 2px rgba(9, 105, 218, 0.15);
+}
+
+.multiline-add-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.submit-hint {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-right: auto;
+}
+
+.multiline-edit-input {
+  flex: 1;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 4px 6px;
+  border: 0.5px solid var(--accent);
+  border-radius: 3px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  outline: none;
+  min-width: 0;
+  resize: vertical;
+}
+
+.multiline {
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .prompt-item {
@@ -497,22 +535,7 @@ body {
 .prompt-content {
   flex: 1;
   font-size: 13px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   cursor: default;
-}
-
-.prompt-edit-input {
-  flex: 1;
-  font-size: 13px;
-  padding: 2px 6px;
-  border: 0.5px solid var(--accent);
-  border-radius: 3px;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  outline: none;
-  min-width: 0;
 }
 
 .prompt-actions {
@@ -532,27 +555,6 @@ body {
   margin-bottom: 24px;
 }
 
-.log-add-form {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.log-add-form input {
-  flex: 1;
-  padding: 6px 8px;
-  font-size: 13px;
-  border: 0.5px solid var(--border-primary);
-  border-radius: 4px;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  outline: none;
-}
-
-.log-add-form input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(9, 105, 218, 0.15);
-}
 
 .log-entry {
   display: flex;
@@ -572,18 +574,6 @@ body {
 .log-content {
   color: var(--text-primary);
   cursor: default;
-}
-
-.log-edit-input {
-  flex: 1;
-  font-size: 13px;
-  padding: 2px 6px;
-  border: 0.5px solid var(--accent);
-  border-radius: 3px;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  outline: none;
-  min-width: 0;
 }
 
 /* ──── Status Pill ──── */
