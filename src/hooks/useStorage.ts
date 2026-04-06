@@ -144,7 +144,7 @@ export function useProgressLogs(taskId: string | null) {
   const reload = useCallback(async () => {
     if (!taskIdRef.current) { setLogs([]); return }
     const data = await adapter.getLogsByTask(taskIdRef.current)
-    setLogs(data)
+    setLogs([...data].sort((a, b) => b.createdAt.localeCompare(a.createdAt)))
   }, [])
 
   useEffect(() => { reload() }, [taskId, reload])
@@ -177,7 +177,7 @@ export function usePrompts(taskId: string | null) {
   const reload = useCallback(async () => {
     if (!taskIdRef.current) { setPrompts([]); return }
     const data = await adapter.getPromptsByTask(taskIdRef.current)
-    setPrompts(data)
+    setPrompts([...data].sort((a, b) => b.order - a.order))
   }, [])
 
   useEffect(() => { reload() }, [taskId, reload])
