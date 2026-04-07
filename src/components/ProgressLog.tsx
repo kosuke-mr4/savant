@@ -5,6 +5,7 @@ interface Props {
   logs: ProgressLogType[]
   onAdd: (content: string) => void
   onUpdate: (log: ProgressLogType) => void
+  onDelete: (id: string) => void
 }
 
 function formatDate(iso: string): string {
@@ -18,7 +19,7 @@ function autoSize(el: HTMLTextAreaElement | null) {
   el.style.height = el.scrollHeight + 'px'
 }
 
-export function ProgressLog({ logs, onAdd, onUpdate }: Props) {
+export function ProgressLog({ logs, onAdd, onUpdate, onDelete }: Props) {
   const [collapsed, setCollapsed] = useState(false)
   const [adding, setAdding] = useState(false)
   const [value, setValue] = useState('')
@@ -114,6 +115,13 @@ export function ProgressLog({ logs, onAdd, onUpdate }: Props) {
               ) : (
                 <span className="log-content multiline" onDoubleClick={() => startEdit(log)}>{log.content}</span>
               )}
+              <button
+                className="btn-icon btn-danger log-delete"
+                title="Delete"
+                onClick={() => onDelete(log.id)}
+              >
+                ×
+              </button>
             </div>
           ))}
         </>

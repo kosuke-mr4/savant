@@ -16,7 +16,7 @@ interface Props {
 export function DetailPanel({ task, project, onUpdateTask, onDeleteTask }: Props) {
   const { resources, addResource, updateResource, deleteResource } = useResources(task.id)
   const { prompts, addPrompt, updatePrompt, deletePrompt } = usePrompts(task.id)
-  const { logs, addLog, updateLog } = useProgressLogs(task.id)
+  const { logs, addLog, updateLog, deleteLog } = useProgressLogs(task.id)
   const [editingName, setEditingName] = useState(false)
   const [editingDesc, setEditingDesc] = useState(false)
   const [nameValue, setNameValue] = useState(task.name)
@@ -108,7 +108,7 @@ export function DetailPanel({ task, project, onUpdateTask, onDeleteTask }: Props
 
       <ResourceList resources={resources} onAdd={addResource} onUpdate={updateResource} onDelete={deleteResource} />
       <PromptList prompts={prompts} onAdd={addPrompt} onUpdate={updatePrompt} onDelete={deletePrompt} />
-      <ProgressLog logs={logs} onAdd={addLog} onUpdate={updateLog} />
+      <ProgressLog logs={logs} onAdd={addLog} onUpdate={updateLog} onDelete={deleteLog} />
     </div>
   )
 }

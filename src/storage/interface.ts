@@ -17,6 +17,7 @@ export interface StorageAdapter {
 
   getLogsByTask(taskId: string): Promise<ProgressLog[]>
   addLog(log: ProgressLog): Promise<void>
+  deleteLog(id: string): Promise<void>
 
   getPromptsByTask(taskId: string): Promise<Prompt[]>
   savePrompt(prompt: Prompt): Promise<void>

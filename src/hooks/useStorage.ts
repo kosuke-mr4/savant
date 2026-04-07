@@ -166,7 +166,12 @@ export function useProgressLogs(taskId: string | null) {
     await reload()
   }, [reload])
 
-  return { logs, addLog, updateLog, reload }
+  const deleteLog = useCallback(async (id: string) => {
+    await adapter.deleteLog(id)
+    await reload()
+  }, [reload])
+
+  return { logs, addLog, updateLog, deleteLog, reload }
 }
 
 export function usePrompts(taskId: string | null) {

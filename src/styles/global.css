@@ -582,6 +582,7 @@ body {
 
 .log-entry {
   display: flex;
+  align-items: flex-start;
   gap: 12px;
   padding: 4px 0;
   font-size: 13px;
@@ -596,8 +597,19 @@ body {
 }
 
 .log-content {
+  flex: 1;
   color: var(--text-primary);
   cursor: default;
+}
+
+.log-delete {
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+.log-entry:hover .log-delete {
+  opacity: 1;
 }
 
 /* ──── Status Pill ──── */

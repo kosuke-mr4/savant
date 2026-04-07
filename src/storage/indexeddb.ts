@@ -140,6 +140,11 @@ export class IndexedDBAdapter implements StorageAdapter {
     await db.put('progressLogs', log)
   }
 
+  async deleteLog(id: string): Promise<void> {
+    const db = await this.dbPromise
+    await db.delete('progressLogs', id)
+  }
+
   async getPromptsByTask(taskId: string): Promise<Prompt[]> {
     const db = await this.dbPromise
     const prompts = await db.getAllFromIndex('prompts', 'taskId', taskId)
