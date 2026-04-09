@@ -82,7 +82,15 @@ export function DetailPanel({ task, project, onUpdateTask, onDeleteTask }: Props
           <button className="btn-sm" onClick={copyContext} title="Copy context bundle">
             {copied ? '✓ Copied' : 'Copy context'}
           </button>
-          <button className="btn-sm btn-danger" onClick={() => onDeleteTask(task.id)} title="Delete task">
+          <button
+            className="btn-sm btn-danger"
+            onClick={() => {
+              if (confirm(`Delete task "${task.name}"? This cannot be undone.`)) {
+                onDeleteTask(task.id)
+              }
+            }}
+            title="Delete task"
+          >
             Delete
           </button>
         </div>
