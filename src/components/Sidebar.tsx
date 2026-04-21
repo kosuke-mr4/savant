@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { Project, Task } from '../types'
 
 interface Props {
@@ -34,6 +34,24 @@ export function Sidebar({
   allTasksByProject,
 }: Props) {
   const [expandedProjects, setExpandedProjects] = useState<Set<string>>(new Set())
+  const initializedRef = useRef(false)
+
+  useEffect(() => {
+    if (initializedRef.current) return
+    if (projects.length === 0) return
+    const active = new Set<string>()
+    for (const p of projects) {
+      const tasks = allTasksByProject[p.id] || []
+      if (tasks.some(t => t.status === 'todo' || t.status === 'in_progress')) {
+        active.add(p.id)
+      }
+    }
+    if (active.size > 0) {
+      setExpandedProjects(active)
+    }
+    initializedRef.current = true
+  }, [projects, allTasksByProject])
+
   const [addingProject, setAddingProject] = useState(false)
   const [addingTaskFor, setAddingTaskFor] = useState<string | null>(null)
   const [renamingProjectId, setRenamingProjectId] = useState<string | null>(null)
