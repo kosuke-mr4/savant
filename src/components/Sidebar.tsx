@@ -39,6 +39,7 @@ export function Sidebar({
   useEffect(() => {
     if (initializedRef.current) return
     if (projects.length === 0) return
+    if (Object.keys(allTasksByProject).length === 0) return
     const active = new Set<string>()
     for (const p of projects) {
       const tasks = allTasksByProject[p.id] || []
